@@ -8,7 +8,25 @@
 <body>
    
     <main>
-        
+       <nav>
+           <input id="search" type="text">
+           <div id="info">
+               <table>
+                  <tr>
+                      <th>Код региона</th>
+                      <th>Наименование</th>
+                      <th>Местное время</th>
+                  </tr>
+                  <tr>
+                      <td>66</td>
+                      <td>Свердловская область</td>
+                      <td>2.45</td>
+                  </tr>
+               </table>
+           </div>
+           <a id="show_all" class="button">Показать все регионы</a>
+       </nav>
+       <div id="result"></div>
     </main>
     
     <script src="scripts/db.json"></script>

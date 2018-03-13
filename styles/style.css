@@ -1,9 +1,36 @@
+@font-face {
+    font-family: "Open Sans";
+    src: url(../fonts/Open_Sans/OpenSans-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url(../fonts/Open_Sans/OpenSans-Bold.ttf);
+    font-weight: bold;
+}
+
 * {
     margin: 0;
     padding: 0;
 }
 
+a {
+    cursor: pointer;
+}
+
+.button {
+    margin: 0 20xp;
+    padding: 4px 20px;
+    font-weight: bold;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    background: lightblue;
+}
+
 body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
     background: lightgray;
 }
 
@@ -11,6 +38,45 @@ main {
     margin: 20px auto;
     padding: 20px;
     width: 1000px;
-    
+    box-sizing: border-box;
     background: white;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+
+#search {
+    padding: 0 10px;
+    width: 100%;
+    line-height: 24px;
+    box-sizing: border-box;
+    font-size: 14px;
+    border: 1px solid lightgray;
+}
+
+#info {
+    margin-bottom: 20px;
+    padding: 20px 0;
+/*    border: 1px solid black;*/
+}
+
+#info table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#info th {
+    padding-bottom: 5px;
+}
+
+#info td {
+    padding: 0 10px;
+    line-height: 24px;
+    border: 1px solid lightgray;
+}
+
+#result {
+    display: none;
+    font-size: 12px;
 }
