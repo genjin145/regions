@@ -37,13 +37,18 @@ body {
 main {
     margin: 20px auto;
     padding: 20px;
-    width: 1000px;
+    width: 800px;
     box-sizing: border-box;
     background: white;
 }
 
 nav {
     margin-bottom: 20px;
+}
+
+nav label {
+    color: gray;
+    font-size: 11px;
 }
 
 #search {
@@ -79,4 +84,8 @@ nav {
 #result {
     display: none;
     font-size: 12px;
+}
+
+.mark {
+    background: lightblue;
 }
