@@ -1,37 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles/style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Document</title>
+	<link rel="stylesheet" href="styles/bootstrap.css">
+	<link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-   
-    <main>
-       <nav>
-           <input id="search" type="text" autofocus>
-           <label for="search">Введите ИНН, код или наименование региона</label>
-           <div id="info">
-               <table>
-                  <tr>
-                      <th>Код региона</th>
-                      <th>Наименование</th>
-                      <th>Местное время</th>
-                  </tr>
-                  <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                  </tr>
-               </table>
-           </div>
-           <a id="show_all" class="button">Показать все регионы</a>
-       </nav>
-       <div id="result"></div>
-    </main>
-    
-    <script src="scripts/db.json"></script>
-    <script src="scripts/main.js"></script>
-    <script src="scripts/db.json"></script>
+	<div class="container">
+		<div class="row justify-content-md-center">
+			<div class="col-8">
+				<div class="input-group mb-3">
+					<input id="search" class="form-control" type="text" placeholder="Введите ИНН, код или наименование региона" autofocus>
+				</div>
+			</div>
+		</div>
+
+		<div class="row justify-content-md-center">
+			<div class="col-8">
+				<table class="table">
+					<thead>
+						<tr class="bg-dark text-light">
+							<th scope="col">Код региона</th>
+							<th scope="col">Наименование</th>
+							<th scope="col">Местное время</th>
+						</tr>
+					</thead>
+					<tbody id="result">
+						<tr id="info" scope="row">
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<script src="scripts/db.json"></script>
+	<script src="scripts/main.js"></script>
 </body>
 </html>
