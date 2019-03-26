@@ -3,7 +3,7 @@ var main = document.getElementsByTagName("main")[0],
   p = document.getElementsByTagName("p"),
 
   date = new Date(),
-  maxResult = 4,
+  maxResult = 5,
   arrReg = [],
   searchReg;
 
@@ -32,7 +32,7 @@ function writeResult(where, what, howMuch) {
 
     td[0].textContent = what[i].id;
     td[1].textContent = what[i].name;
-    td[2].textContent = what[i].time;
+    td[2].textContent = convert_hour(what[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + what[i].time + ")";
   }
 
   if (Array.isArray(what)) {
@@ -42,10 +42,11 @@ function writeResult(where, what, howMuch) {
     for (let i = 0; i < what.length && i < howMuch; i++) {
       wrapper(i);
     }
-  } else if (typeof what == Object) {
+  } else if (typeof what == "object") {
+    what = [what];
+    console.log(what);
     wrapper(0);
   }
-
 }
 
 function set_default() {
@@ -58,12 +59,18 @@ search.oninput = function() {
 
   if (Number(searchReg.slice(0, 2))) {
     searchReg = Number(searchReg.slice(0, 2));
-    clearResult();
+    arrReg = [];
     for (let i = 0; i < db.length; i++) {
-      if (searchReg == db[i].id) {
-        writeResult(result, searchReg, 1);
+      if (~db[i].id.toString().indexOf(searchReg)) {
+        arrReg.push({
+          id: db[i].id,
+          name: db[i].name,
+          time: db[i].time
+        });
       }
     }
+    clearResult();
+    writeResult(result, arrReg, maxResult);
   }
 
   if (typeof searchReg == "string") {
@@ -73,12 +80,12 @@ search.oninput = function() {
         arrReg.push({
           id: db[i].id,
           name: db[i].name,
-          time: convert_hour(db[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + db[i].time + ")"
+          time: db[i].time
         });
       }
     }
     clearResult();
-    writeResult(result, arrReg, maxResult);
+    writeResult(result, arrReg);
   }
 
   if (searchReg == "") {
@@ -98,8 +105,4 @@ buttonAllResult.onclick = function() {
   this.classList.toggle("active");
 }
 
-// 1) вводится строка в input, value присваиваются в переменную searchReg
-// 2) если searchReg число, то поиск по id
-// 3) если searchReg слово, то поиск по name
-
-// вывод результатов максимально 4 шт
+writeResult(result, db[76]);

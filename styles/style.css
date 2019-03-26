@@ -8,3 +8,7 @@ body {
 .active {
     background-color: lightgray;
 }
+
+.map {
+    width: 100%;
+}
