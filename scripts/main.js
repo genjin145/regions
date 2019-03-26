@@ -3,6 +3,7 @@ var main = document.getElementsByTagName("main")[0],
   p = document.getElementsByTagName("p"),
 
   date = new Date(),
+  maxResult = 4,
   arrReg = [],
   searchReg;
 
@@ -20,21 +21,36 @@ function clearResult() {
   result.innerHTML = "";
 }
 
-function set_default() {
-  clearResult();
-
-  for (let i = 0; i < db.length; i++) {
+function writeResult(where, what, howMuch) {
+  function wrapper(i) {
     let resultTemplate = document.getElementsByClassName("result-template")[0].content.cloneNode(true);
-
-    result.appendChild(resultTemplate);
+  
+    where.appendChild(resultTemplate);
 
     let info = result.getElementsByClassName("info")[i],
-      td = info.getElementsByTagName("td");
-    
-    td[0].textContent = db[i].id;
-    td[1].textContent = db[i].name;
-    td[2].textContent = convert_hour(db[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + db[i].time + ")";
+        td = info.getElementsByTagName("td");
+
+    td[0].textContent = what[i].id;
+    td[1].textContent = what[i].name;
+    td[2].textContent = what[i].time;
   }
+
+  if (Array.isArray(what)) {
+    if (!howMuch) {
+      howMuch = what.length;
+    }
+    for (let i = 0; i < what.length && i < howMuch; i++) {
+      wrapper(i);
+    }
+  } else if (typeof what == Object) {
+    wrapper(0);
+  }
+
+}
+
+function set_default() {
+  clearResult();
+  writeResult(result, db);
 }
 
 search.oninput = function() {
@@ -45,16 +61,7 @@ search.oninput = function() {
     clearResult();
     for (let i = 0; i < db.length; i++) {
       if (searchReg == db[i].id) {
-        let resultTemplate = document.getElementsByClassName("result-template")[0].content.cloneNode(true);
-
-        result.appendChild(resultTemplate);
-
-        let info = result.getElementsByClassName("info")[0],
-          td = info.getElementsByTagName("td");
-    
-        td[0].textContent = db[i].id;
-        td[1].textContent = db[i].name;
-        td[2].textContent = convert_hour(db[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + db[i].time + ")";
+        writeResult(result, searchReg, 1);
       }
     }
   }
@@ -71,18 +78,7 @@ search.oninput = function() {
       }
     }
     clearResult();
-    for (let i = 0; i < arrReg.length; i++) {
-      let resultTemplate = document.getElementsByClassName("result-template")[0].content.cloneNode(true);
-
-      result.appendChild(resultTemplate);
-
-      let info = result.getElementsByClassName("info")[i],
-          td = info.getElementsByTagName("td");
-  
-      td[0].textContent = arrReg[i].id;
-      td[1].textContent = arrReg[i].name;
-      td[2].textContent = arrReg[i].time;
-    }
+    writeResult(result, arrReg, maxResult);
   }
 
   if (searchReg == "") {
