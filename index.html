@@ -1,45 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Document</title>
-	<link rel="stylesheet" href="styles/bootstrap.css">
-	<link rel="stylesheet" href="styles/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Регион</title>
+  <link rel="stylesheet" href="styles/bootstrap.css">
+  <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-	<div class="container">
-		<div class="row justify-content-md-center">
-			<div class="col-8">
-				<div class="input-group mb-3">
-					<input id="search" class="form-control" type="text" placeholder="Введите ИНН, код или наименование региона" autofocus>
-				</div>
-			</div>
-		</div>
+  <div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-12">
+        <div class="input-group mb-3">
+          <input id="search" class="form-control" type="text" placeholder="Введите ИНН, код или наименование региона" autofocus>
+          <div class="input-group-append">
+            <button class="button-all-result btn btn-outline-dark" type="button" data-text="Показать все" data-second-text="Скрыть">Показать все</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-		<div class="row justify-content-md-center">
-			<div class="col-8">
-				<table class="table">
-					<thead>
-						<tr class="bg-dark text-light">
-							<th scope="col">Код региона</th>
-							<th scope="col">Наименование</th>
-							<th scope="col">Местное время</th>
-						</tr>
-					</thead>
-					<tbody id="result">
-						<tr id="info" scope="row">
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
-	
-	<script src="scripts/db.json"></script>
-	<script src="scripts/main.js"></script>
+    <div class="row justify-content-md-center">
+      <div class="col-12">
+        <table class="table">
+          <thead>
+            <tr class="bg-dark text-light">
+              <th scope="col">Код региона</th>
+              <th scope="col">Наименование</th>
+              <th scope="col">Местное время</th>
+            </tr>
+          </thead>
+          <template class="result-template">
+            <tr class="info" scope="row">
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </template>
+          <tbody class="result">
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <script src="scripts/db.js"></script>
+  <script src="scripts/main.js"></script>
 </body>
 </html>

@@ -1,51 +1,109 @@
 var main = document.getElementsByTagName("main")[0],
-	p = document.getElementsByTagName("p"),
-	td = info.getElementsByTagName("td"),
+  result = document.getElementsByClassName("result")[0],
+  p = document.getElementsByTagName("p"),
 
-	date = new Date(),
-	search_code;
+  date = new Date(),
+  arrReg = [],
+  searchReg;
 
+var buttonAllResult = document.getElementsByClassName("button-all-result")[0];
 
 function convert_hour(gmt) {
-	if (date.getUTCHours() + gmt > 24) {
-		return date.getUTCHours() + gmt - 24;
-	} else {
-	   return date.getUTCHours() + gmt;
-	} 
+  if (date.getUTCHours() + gmt > 24) {
+    return date.getUTCHours() + gmt - 24;
+  } else {
+     return date.getUTCHours() + gmt;
+  } 
+}
+
+function clearResult() {
+  result.innerHTML = "";
 }
 
 function set_default() {
-	td[0].textContent = db[65].id;
-	td[1].textContent = db[65].name;
-	td[2].textContent = convert_hour(db[65].time) + ":" + date.getUTCMinutes() + " (GMT +" + db[65].time + ")";
-}
+  clearResult();
 
-set_default();
+  for (let i = 0; i < db.length; i++) {
+    let resultTemplate = document.getElementsByClassName("result-template")[0].content.cloneNode(true);
+
+    result.appendChild(resultTemplate);
+
+    let info = result.getElementsByClassName("info")[i],
+      td = info.getElementsByTagName("td");
+    
+    td[0].textContent = db[i].id;
+    td[1].textContent = db[i].name;
+    td[2].textContent = convert_hour(db[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + db[i].time + ")";
+  }
+}
 
 search.oninput = function() {
-	if (this.value.length < 2) {
-		search_code = this.value;
-	} else {
-		search_code = this.value.slice(0, 2);
-	}
-	
-	if (Number(search_code)) {
-		date = new Date();
-		for (var i = 0; i < db.length; i++) {
-			if (result.getAttribute("class") == "show" && search_code == db[i].id) {
-				p[i].classList.add("mark");
-			} else if (result.getAttribute("class") == "show") {
-				p[i].classList.remove("mark");
-			}
+  searchReg = this.value;
 
-			if (search_code == db[i].id) {
-				td[0].textContent = db[i].id;
-				td[1].textContent = db[i].name;
-				td[2].textContent = convert_hour(db[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + db[i].time + ")";
-			}
-		}
-	}
-	if (search_code == "") {
-		set_default();
-	}
+  if (Number(searchReg.slice(0, 2))) {
+    searchReg = Number(searchReg.slice(0, 2));
+    clearResult();
+    for (let i = 0; i < db.length; i++) {
+      if (searchReg == db[i].id) {
+        let resultTemplate = document.getElementsByClassName("result-template")[0].content.cloneNode(true);
+
+        result.appendChild(resultTemplate);
+
+        let info = result.getElementsByClassName("info")[0],
+          td = info.getElementsByTagName("td");
+    
+        td[0].textContent = db[i].id;
+        td[1].textContent = db[i].name;
+        td[2].textContent = convert_hour(db[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + db[i].time + ")";
+      }
+    }
+  }
+
+  if (typeof searchReg == "string") {
+    arrReg = [];
+    for (let i = 0; i < db.length; i++) {
+      if (~db[i].name.toLowerCase().indexOf(searchReg.toLowerCase())) {
+        arrReg.push({
+          id: db[i].id,
+          name: db[i].name,
+          time: convert_hour(db[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + db[i].time + ")"
+        });
+      }
+    }
+    clearResult();
+    for (let i = 0; i < arrReg.length; i++) {
+      let resultTemplate = document.getElementsByClassName("result-template")[0].content.cloneNode(true);
+
+      result.appendChild(resultTemplate);
+
+      let info = result.getElementsByClassName("info")[i],
+          td = info.getElementsByTagName("td");
+  
+      td[0].textContent = arrReg[i].id;
+      td[1].textContent = arrReg[i].name;
+      td[2].textContent = arrReg[i].time;
+    }
+  }
+
+  if (searchReg == "") {
+    clearResult();
+  }
 }
+
+buttonAllResult.onclick = function() {
+  if (this.classList.contains("active")) {
+    this.textContent = this.dataset.text;
+    clearResult();
+    
+  } else {
+    this.textContent = this.dataset.secondText;
+    set_default();
+  }
+  this.classList.toggle("active");
+}
+
+// 1) вводится строка в input, value присваиваются в переменную searchReg
+// 2) если searchReg число, то поиск по id
+// 3) если searchReg слово, то поиск по name
+
+// вывод результатов максимально 4 шт
