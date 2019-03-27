@@ -1,11 +1,12 @@
 var main = document.getElementsByTagName("main")[0],
-  result = document.getElementsByClassName("result")[0],
-  p = document.getElementsByTagName("p"),
+    map = document.getElementsByClassName("map")[0],
+    result = document.getElementsByClassName("result")[0],
+    p = document.getElementsByTagName("p"),
 
-  date = new Date(),
-  maxResult = 5,
-  arrReg = [],
-  searchReg;
+    date = new Date(),
+    maxResult = 5,
+    arrReg = [],
+    searchReg;
 
 var buttonAllResult = document.getElementsByClassName("button-all-result")[0];
 
@@ -44,7 +45,6 @@ function writeResult(where, what, howMuch) {
     }
   } else if (typeof what == "object") {
     what = [what];
-    console.log(what);
     wrapper(0);
   }
 }
@@ -52,6 +52,27 @@ function writeResult(where, what, howMuch) {
 function set_default() {
   clearResult();
   writeResult(result, db);
+}
+
+map.onmouseover = function(evt) {
+  if (evt.target.tagName == "path") {
+    evt.target.style.fill = "red";
+    for (let i = 0; i < db.length; i++) {
+      if (evt.target.id == db[i].textId) {
+        search.value = db[i].name;
+        search.oninput();
+        break;
+      } else {
+        search.value = evt.target.id;
+      }
+    }
+    
+    console.log(evt.target.id);
+    evt.target.onmouseout = function() {
+      this.style.fill = "transparent";
+      // console.log("wow");
+    }
+  }
 }
 
 search.oninput = function() {
@@ -106,6 +127,11 @@ buttonAllResult.onclick = function() {
 }
 
 writeResult(result, db[76]);
+
+// var a = document.querySelectorAll("path");
+// for (let i = 0; i < a.length; i++) {
+//   document.write('"textId": "' + a[i].id + '",<br>');
+// }
 
 // 1) Интерактивная карта.
 //     при hover подсвечиается и выходит tooltip с наименованием области
