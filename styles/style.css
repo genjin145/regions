@@ -11,4 +11,13 @@ body {
 
 .map {
     width: 100%;
+    min-height: 600px;
+}
+
+.map path {
+    stroke: black;
+}
+
+.map path:hover {
+    fill: gray;
 }
