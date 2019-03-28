@@ -17,7 +17,3 @@ body {
 .map path {
     stroke: black;
 }
-
-.map path:hover {
-    /* fill: gray; */
-}
