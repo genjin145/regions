@@ -55,8 +55,10 @@ function set_default() {
 }
 
 map.onmouseover = function(evt) {
+  let lostColor;
   if (evt.target.tagName == "path") {
-    evt.target.style.fill = "red";
+    lostColor = evt.target.style.fill;
+    evt.target.style.fill = "rgba(0, 0, 0, 0.2)";
     for (let i = 0; i < db.length; i++) {
       if (evt.target.id == db[i].textId) {
         search.value = db[i].name;
@@ -69,9 +71,16 @@ map.onmouseover = function(evt) {
     
     console.log(evt.target.id);
     evt.target.onmouseout = function() {
-      this.style.fill = "transparent";
+      this.style.fill = lostColor;
       // console.log("wow");
     }
+  }
+}
+
+function clearMap() {
+  let path = map.getElementsByTagName("path");
+  for (let i = 0; i < path.length; i++) {
+    path[i].style.fill = "transparent";
   }
 }
 
@@ -100,6 +109,7 @@ search.oninput = function() {
       if (~db[i].name.toLowerCase().indexOf(searchReg.toLowerCase())) {
         arrReg.push({
           id: db[i].id,
+          textId: db[i].textId,
           name: db[i].name,
           time: db[i].time
         });
@@ -107,10 +117,21 @@ search.oninput = function() {
     }
     clearResult();
     writeResult(result, arrReg);
+    
+    clearMap();
+    for (let i = 0; i < arrReg.length; i++) {
+      if (arrReg[i].textId) {
+        let path = document.querySelector("#" + arrReg[i].textId);
+        console.log(arrReg[i].textId);
+        path.style.fill = "red";
+      }
+      
+    }
   }
 
   if (searchReg == "") {
     clearResult();
+    clearMap();
   }
 }
 

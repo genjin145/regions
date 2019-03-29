@@ -17,3 +17,7 @@ body {
 .map path {
     stroke: black;
 }
+
+#SVE {
+    fill: blue;
+}
