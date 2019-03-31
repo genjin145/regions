@@ -18,6 +18,19 @@ body {
     stroke: black;
 }
 
-#SVE {
-    fill: blue;
+.tooltip-region {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    padding: 2px 10px;
+    color: black;
+    background-color: #fff;
+    border: 1px solid #888;
+    border-radius: 10px;
+    border-top-left-radius: 0;
+}
+
+.hidden {
+    display: none;
 }

@@ -49,32 +49,9 @@ function writeResult(where, what, howMuch) {
   }
 }
 
-function set_default() {
+function setDefault() {
   clearResult();
   writeResult(result, db);
-}
-
-map.onmouseover = function(evt) {
-  let lostColor;
-  if (evt.target.tagName == "path") {
-    lostColor = evt.target.style.fill;
-    evt.target.style.fill = "rgba(0, 0, 0, 0.2)";
-    for (let i = 0; i < db.length; i++) {
-      if (evt.target.id == db[i].textId) {
-        search.value = db[i].name;
-        search.oninput();
-        break;
-      } else {
-        search.value = evt.target.id;
-      }
-    }
-    
-    console.log(evt.target.id);
-    evt.target.onmouseout = function() {
-      this.style.fill = lostColor;
-      // console.log("wow");
-    }
-  }
 }
 
 function clearMap() {
@@ -84,50 +61,68 @@ function clearMap() {
   }
 }
 
+function fillRegionMap(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].textId) {
+      let path = document.querySelector("#" + arr[i].textId);
+      path.style.fill = "#343A40";
+    }
+  }
+}
+
+function searchOverlap(elem, arr) {
+  if (Number(elem.slice(0, 2))) {
+    return arr.filter((el) => {
+      if (el.id.toString().length == 1) {
+        el.id = "0" + el.id.toString();
+      } 
+      return el.id.toString().indexOf(elem.toString().slice(0, 2)) > -1;
+    });
+  }
+  if (typeof elem == "string") {
+      return arr.filter((el) =>
+      el.name.toLowerCase().indexOf(elem.toLowerCase()) > -1
+    );
+  }
+}
+
+map.onmouseover = function(evt) {
+  let lostColor;
+  if (evt.target.tagName == "path") {
+    lostColor = evt.target.style.fill;
+    evt.target.style.fill = "rgba(0, 0, 0, 0.2)";
+    evt.target.onmouseout = function() {
+      this.style.fill = lostColor;
+      // console.log("wow");
+    }
+    evt.target.onclick = function() {
+      for (let i = 0; i < db.length; i++) {
+        if (evt.target.id == db[i].textId) {
+          search.value = db[i].name;
+          clearResult();
+          writeResult(result, searchOverlap(search.value, db));
+          // search.oninput();
+          break;
+        } else {
+          search.value = evt.target.id;
+        }
+      }
+      clearMap();
+      this.style.fill = "#343A40";
+      lostColor = this.style.fill;
+    }
+  }
+}
+
 search.oninput = function() {
   searchReg = this.value;
+  arrReg = searchOverlap(searchReg, db);
 
-  if (Number(searchReg.slice(0, 2))) {
-    searchReg = Number(searchReg.slice(0, 2));
-    arrReg = [];
-    for (let i = 0; i < db.length; i++) {
-      if (~db[i].id.toString().indexOf(searchReg)) {
-        arrReg.push({
-          id: db[i].id,
-          name: db[i].name,
-          time: db[i].time
-        });
-      }
-    }
-    clearResult();
-    writeResult(result, arrReg, maxResult);
-  }
+  clearResult();
+  writeResult(result, arrReg);
 
-  if (typeof searchReg == "string") {
-    arrReg = [];
-    for (let i = 0; i < db.length; i++) {
-      if (~db[i].name.toLowerCase().indexOf(searchReg.toLowerCase())) {
-        arrReg.push({
-          id: db[i].id,
-          textId: db[i].textId,
-          name: db[i].name,
-          time: db[i].time
-        });
-      }
-    }
-    clearResult();
-    writeResult(result, arrReg);
-    
-    clearMap();
-    for (let i = 0; i < arrReg.length; i++) {
-      if (arrReg[i].textId) {
-        let path = document.querySelector("#" + arrReg[i].textId);
-        console.log(arrReg[i].textId);
-        path.style.fill = "red";
-      }
-      
-    }
-  }
+  clearMap();
+  fillRegionMap(arrReg);
 
   if (searchReg == "") {
     clearResult();
@@ -142,12 +137,27 @@ buttonAllResult.onclick = function() {
     
   } else {
     this.textContent = this.dataset.secondText;
-    set_default();
+    setDefault();
   }
   this.classList.toggle("active");
 }
 
 writeResult(result, db[76]);
+
+document.onmousemove = function(evt) {
+  let tooltipRegion = document.getElementsByClassName("tooltip-region")[0];
+  tooltipRegion.classList.add("hidden");
+  for (let i = 0; i < db.length; i++) {
+    if (evt.target.id == db[i].textId) {
+      tooltipRegion.classList.remove("hidden");
+      tooltipRegion.textContent = db[i].name;
+      // search.oninput();
+      break;
+    }
+  }
+  tooltipRegion.style.left = evt.clientX + "px";
+  tooltipRegion.style.top = evt.clientY + window.pageYOffset + 30 + "px";
+}
 
 // var a = document.querySelectorAll("path");
 // for (let i = 0; i < a.length; i++) {
