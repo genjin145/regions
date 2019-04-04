@@ -130,15 +130,16 @@ search.oninput = function() {
 }
 
 buttonAllResult.onclick = function() {
-  if (this.classList.contains("active")) {
-    this.textContent = this.dataset.text;
-    clearResult();
-    
-  } else {
-    this.textContent = this.dataset.secondText;
-    setDefault();
-  }
-  this.classList.toggle("active");
+  // if (this.classList.contains("active")) {
+  //   this.textContent = this.dataset.text;
+  //   clearResult();
+  // } else {
+  //   this.textContent = this.dataset.secondText;
+  //   setDefault();
+  // }
+  // this.classList.toggle("active");
+  clearResult();
+  setDefault();
 }
 
 result.onclick = function(evt) {
