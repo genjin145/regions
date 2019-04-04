@@ -1,4 +1,4 @@
-var main = document.getElementsByTagName("main")[0],
+let main = document.getElementsByTagName("main")[0],
     map = document.getElementsByClassName("map")[0],
     result = document.getElementsByClassName("result")[0],
     p = document.getElementsByTagName("p"),
@@ -8,14 +8,14 @@ var main = document.getElementsByTagName("main")[0],
     arrReg = [],
     searchReg;
 
-var buttonAllResult = document.getElementsByClassName("button-all-result")[0];
+let buttonAllResult = document.getElementsByClassName("button-all-result")[0];
 
-function convert_hour(gmt) {
+function convertHour(gmt) {
   if (date.getUTCHours() + gmt > 24) {
     return date.getUTCHours() + gmt - 24;
   } else {
      return date.getUTCHours() + gmt;
-  } 
+  }
 }
 
 function clearResult() {
@@ -25,15 +25,15 @@ function clearResult() {
 function writeResult(where, what, howMuch) {
   function wrapper(i) {
     let resultTemplate = document.getElementsByClassName("result-template")[0].content.cloneNode(true);
-  
+
     where.appendChild(resultTemplate);
 
-    let info = result.getElementsByClassName("info")[i],
-        td = info.getElementsByTagName("td");
+    let resulRow = result.getElementsByClassName("result__row")[i],
+        td = resulRow.getElementsByTagName("td");
 
     td[0].textContent = what[i].id;
     td[1].textContent = what[i].name;
-    td[2].textContent = convert_hour(what[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + what[i].time + ")";
+    td[2].textContent = convertHour(what[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + what[i].time + ")";
   }
 
   if (Array.isArray(what)) {
@@ -65,7 +65,7 @@ function fillRegionMap(arr) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].textId) {
       let path = document.querySelector("#" + arr[i].textId);
-      path.style.fill = "#343A40";
+      path.style.fill = "#6C757D";
     }
   }
 }
@@ -90,10 +90,10 @@ map.onmouseover = function(evt) {
   let lostColor;
   if (evt.target.tagName == "path") {
     lostColor = evt.target.style.fill;
-    evt.target.style.fill = "rgba(0, 0, 0, 0.2)";
+    // evt.target.style.fill = "rgba(0, 0, 0, 0.2)";
+    evt.target.style.fill = "#E9ECEF";
     evt.target.onmouseout = function() {
       this.style.fill = lostColor;
-      // console.log("wow");
     }
     evt.target.onclick = function() {
       for (let i = 0; i < db.length; i++) {
@@ -101,14 +101,13 @@ map.onmouseover = function(evt) {
           search.value = db[i].name;
           clearResult();
           writeResult(result, searchOverlap(search.value, db));
-          // search.oninput();
           break;
         } else {
           search.value = evt.target.id;
         }
       }
       clearMap();
-      this.style.fill = "#343A40";
+      this.style.fill = "#6C757D";
       lostColor = this.style.fill;
     }
   }
@@ -142,7 +141,15 @@ buttonAllResult.onclick = function() {
   this.classList.toggle("active");
 }
 
-writeResult(result, db[76]);
+result.onclick = function(evt) {
+  let arr = db.filter(elem => elem.name == evt.target.parentNode.getElementsByClassName("result__name")[0].textContent);
+  if (arr.length > 0) {
+    search.value = arr[0].name;
+    clearMap();
+    fillRegionMap(arr);
+    window.location.assign("#map");
+  }
+}
 
 document.onmousemove = function(evt) {
   let tooltipRegion = document.getElementsByClassName("tooltip-region")[0];
@@ -151,7 +158,6 @@ document.onmousemove = function(evt) {
     if (evt.target.id == db[i].textId) {
       tooltipRegion.classList.remove("hidden");
       tooltipRegion.textContent = db[i].name;
-      // search.oninput();
       break;
     }
   }
@@ -159,10 +165,10 @@ document.onmousemove = function(evt) {
   tooltipRegion.style.top = evt.clientY + window.pageYOffset + 30 + "px";
 }
 
-// var a = document.querySelectorAll("path");
-// for (let i = 0; i < a.length; i++) {
-//   document.write('"textId": "' + a[i].id + '",<br>');
-// }
+// writeResult(result, db[65]);
+// var a = [];
+// a.push(db[65]);
+// fillRegionMap(a);
 
 // 1) Интерактивная карта.
 //     при hover подсвечиается и выходит tooltip с наименованием области

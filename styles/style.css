@@ -1,36 +1,45 @@
 body {
-    margin: 0;
-    padding: 0;
-    padding-top: 20px;
-    font-size: 14px
+  margin: 0;
+  padding: 0;
+  padding-top: 20px;
+  font-size: 14px
 }
 
 .active {
-    background-color: lightgray;
+  background-color: lightgray;
 }
 
 .map {
-    width: 100%;
-    min-height: 600px;
+  width: 100%;
+  min-height: 600px;
+}
+
+.map g:hover {
+  cursor: pointer;
 }
 
 .map path {
-    stroke: black;
+  stroke: black;
 }
 
 .tooltip-region {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    padding: 2px 10px;
-    color: black;
-    background-color: #fff;
-    border: 1px solid #888;
-    border-radius: 10px;
-    border-top-left-radius: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  padding: 2px 10px;
+  color: black;
+  background-color: #fff;
+  border: 1px solid #888;
+  border-radius: 10px;
+  border-top-left-radius: 0;
 }
 
 .hidden {
-    display: none;
+  display: none;
+}
+
+.result tr:hover {
+  background-color: #E9ECEF;
+  cursor: pointer;
 }
