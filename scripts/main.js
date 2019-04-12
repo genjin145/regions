@@ -10,6 +10,21 @@ let main = document.getElementsByTagName("main")[0],
 
 let buttonAllResult = document.getElementsByClassName("button-all-result")[0];
 
+function prepareArray(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    arr[i].id = arr[i].id.toString();
+    if (arr[i].id.length == 1) {
+      arr[i].id = "0" + arr[i].id;
+    }
+    for (let j = i; j < arr.length - 1; j++) {
+      if (arr[i].name == arr[j + 1].name) {
+        arr[i].id += ", " + arr[j + 1].id;
+        arr.splice(j + 1, 1);
+      }
+    }
+  }
+}
+
 function convertHour(gmt) {
   if (date.getUTCHours() + gmt > 24) {
     return date.getUTCHours() + gmt - 24;
@@ -29,11 +44,13 @@ function writeResult(where, what, howMuch) {
     where.appendChild(resultTemplate);
 
     let resulRow = result.getElementsByClassName("result__row")[i],
-        td = resulRow.getElementsByTagName("td");
+        resultId = resulRow.getElementsByClassName("result__id")[0],
+        resultName = resulRow.getElementsByClassName("result__name")[0],
+        resultTime = resulRow.getElementsByClassName("result__time")[0];
 
-    td[0].textContent = what[i].id;
-    td[1].textContent = what[i].name;
-    td[2].textContent = convertHour(what[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + what[i].time + ")";
+    resultId.textContent = what[i].id;
+    resultName.textContent = what[i].name;
+    resultTime.textContent = convertHour(what[i].time) + ":" + date.getUTCMinutes() + " (GMT +" + what[i].time + ")";
   }
 
   if (Array.isArray(what)) {
@@ -72,17 +89,10 @@ function fillRegionMap(arr) {
 
 function searchOverlap(elem, arr) {
   if (Number(elem.slice(0, 2))) {
-    return arr.filter((el) => {
-      if (el.id.toString().length == 1) {
-        el.id = "0" + el.id.toString();
-      } 
-      return el.id.toString().indexOf(elem.toString().slice(0, 2)) > -1;
-    });
+    return arr.filter((el) => el.id.indexOf(elem.slice(0, 2)) > -1);
   }
   if (typeof elem == "string") {
-      return arr.filter((el) =>
-      el.name.toLowerCase().indexOf(elem.toLowerCase()) > -1
-    );
+    return arr.filter((el) => el.name.toLowerCase().indexOf(elem.toLowerCase()) > -1);
   }
 }
 
@@ -166,6 +176,8 @@ document.onmousemove = function(evt) {
   tooltipRegion.style.top = evt.clientY + window.pageYOffset + 30 + "px";
 }
 
+prepareArray(db);
+
 // writeResult(result, db[65]);
 // var a = [];
 // a.push(db[65]);
@@ -188,3 +200,5 @@ document.onmousemove = function(evt) {
 //         вывести все совпадения по id
 //     поиск по наименованию региона
 //         вывести все совпадения по name
+
+// Баг с омской обл
