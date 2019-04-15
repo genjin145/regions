@@ -178,27 +178,109 @@ document.onmousemove = function(evt) {
 
 prepareArray(db);
 
-// writeResult(result, db[65]);
-// var a = [];
-// a.push(db[65]);
-// fillRegionMap(a);
+let btnPlus = document.getElementsByClassName("map__button-plus")[0],
+    btnMinus = document.getElementsByClassName("map__button-minus")[0];
 
-// 1) Интерактивная карта.
-//     при hover подсвечиается и выходит tooltip с наименованием области
-//     при click заполняется поиск, показывается инфа
-    
-//     3 цвета региона на карте: 
-//         1. не активный (белый)
-//         2. при hover (более темный оттенок от исходного цвета)
-//         3. при click (зеленый)
+let b = map.getBBox();
 
-// 2) Поиск и таблица результатов
-//     отображание на карте происходит при input (отображаются все регионы)
-//     при нажатии на ячейку подсвечивается только одна область и подсвечивается сама строка в таблице, при повторном нажатии все возвращается на круги своя (подсвечиваются все результаты)
+let rMap = {
+  x: b.x,
+  y: b.y,
+  width: 680,
+  height: 400,
+  size: 100,
+  maxSize: 200,
+  minSize: 100,
+  stepSize: 10,
+};
 
-//     поиск по коду региона
-//         вывести все совпадения по id
-//     поиск по наименованию региона
-//         вывести все совпадения по name
+rMap.drow = function() {
+  map.setAttribute("viewBox", `${this.x} ${this.y} ${this.width} ${this.height}`);
+}
+rMap.drow();
+rMap.zoomPlus = function(step) {
+  this.size -= step;
+  if (this.size > this.maxSize) {
+    this.size = this.maxSize;
+  }
+  this.width = this.width * (this.size / 100);
+  this.height = this.height * (this.size / 100);
+  rMap.drow();
+}
 
+rMap.zoomMinus = function(step) {
+  this.size += step;
+  if (this.size < this.minSize) {
+    this.size = this.minSize;
+  }
+  this.width = this.width * (this.size / 100);
+  this.height = this.height * (this.size / 100);
+  rMap.drow();
+}
+
+map.onmousedown = function(evt) {
+  let start = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  function onMouseMove(evt) {
+    let shift = {
+      x: start.x - evt.clientX,
+      y: start.y - evt.clientY,
+    };
+    start = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    console.log(b.x);
+    rMap.x += shift.x;
+    rMap.y += shift.y;
+    if (rMap.x < 0) {
+      rMap.x = 0;
+    }
+    if (rMap.x > rMap.width * rMap.size / 100) {
+      rMap.x = rMap.width * rMap.size / 100;
+    }
+    if (rMap.y < 0) {
+      rMap.y = 0;
+    }
+    if (rMap.y > rMap.height / rMap.size * 100) {
+      rMap.y = rMap.height / rMap.size * 100;
+    }
+    rMap.drow();
+  }
+
+  function onMouseUp() {
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  }
+  
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+}
+
+map.onwheel = function(evt) {
+  evt.preventDefault();
+  if (evt.deltaY < 0) {
+    rMap.zoomPlus(10);
+  }
+  if (evt.deltaY > 0) {
+    rMap.zoomMinus(10);
+  }
+  this.style.width = rMap.size + "%";
+  // console.log(evt);
+}
+
+btnPlus.onclick = function() {
+  rMap.zoomPlus(25);
+  // map.style.width = rMap.size + "%";
+}
+
+btnMinus.onclick = function() {
+  rMap.zoomMinus(25);
+  // map.style.width = rMap.size + "%";
+}
 // Баг с омской обл
+// map
+
