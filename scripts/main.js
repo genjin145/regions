@@ -177,8 +177,8 @@ let mapBox = document.getElementsByClassName("map-wrapper")[0],
 let b = map.getBBox();
 
 let rMap = {
-  x: b.x,
-  y: b.y,
+  x: 0,
+  y: 0,
   width: 680,
   height: 400,
   maxWidth: 680,
@@ -235,6 +235,7 @@ map.onmousedown = function(evt) {
   };
 
   function onMouseMove(evt) {
+
     let shift = {
       x: start.x - evt.clientX,
       y: start.y - evt.clientY,
