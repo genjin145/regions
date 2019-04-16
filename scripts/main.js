@@ -188,6 +188,8 @@ let rMap = {
   y: b.y,
   width: 680,
   height: 400,
+  maxWidth: 680,
+  maxHeight: 400,
   size: 100,
   maxSize: 200,
   minSize: 100,
@@ -195,26 +197,41 @@ let rMap = {
 };
 
 rMap.drow = function() {
+  if (this.x < 0) {
+    this.x = 0;
+  }
+  if (this.x > this.maxWidth - this.maxWidth / (this.size / 100)) {
+    this.x = this.maxWidth - this.maxWidth / (this.size / 100);
+  }
+  if (this.y < 0) {
+    this.y = 0;
+  }
+  if (this.y > this.maxHeight - this.maxHeight / (this.size / 100)) {
+    this.y = this.maxHeight - this.maxHeight / (this.size / 100);
+  }
   map.setAttribute("viewBox", `${this.x} ${this.y} ${this.width} ${this.height}`);
 }
 rMap.drow();
+
 rMap.zoomPlus = function(step) {
-  this.size -= step;
+  this.size += step;
   if (this.size > this.maxSize) {
     this.size = this.maxSize;
   }
-  this.width = this.width * (this.size / 100);
-  this.height = this.height * (this.size / 100);
+  console.log(map.getAttribute("viewBox"));
+  this.width = this.maxWidth / (this.size / 100);
+  this.height = this.maxHeight / (this.size / 100);
   rMap.drow();
 }
 
 rMap.zoomMinus = function(step) {
-  this.size += step;
+  this.size -= step;
   if (this.size < this.minSize) {
     this.size = this.minSize;
   }
-  this.width = this.width * (this.size / 100);
-  this.height = this.height * (this.size / 100);
+  console.log(map.getAttribute("viewBox"));
+  this.width = this.maxWidth / (this.size / 100);
+  this.height = this.maxHeight / (this.size / 100);
   rMap.drow();
 }
 
@@ -236,18 +253,7 @@ map.onmousedown = function(evt) {
     console.log(b.x);
     rMap.x += shift.x;
     rMap.y += shift.y;
-    if (rMap.x < 0) {
-      rMap.x = 0;
-    }
-    if (rMap.x > rMap.width * rMap.size / 100) {
-      rMap.x = rMap.width * rMap.size / 100;
-    }
-    if (rMap.y < 0) {
-      rMap.y = 0;
-    }
-    if (rMap.y > rMap.height / rMap.size * 100) {
-      rMap.y = rMap.height / rMap.size * 100;
-    }
+
     rMap.drow();
   }
 
@@ -262,24 +268,22 @@ map.onmousedown = function(evt) {
 
 map.onwheel = function(evt) {
   evt.preventDefault();
+
   if (evt.deltaY < 0) {
+    
     rMap.zoomPlus(10);
   }
   if (evt.deltaY > 0) {
     rMap.zoomMinus(10);
   }
-  this.style.width = rMap.size + "%";
-  // console.log(evt);
 }
 
 btnPlus.onclick = function() {
   rMap.zoomPlus(25);
-  // map.style.width = rMap.size + "%";
 }
 
 btnMinus.onclick = function() {
   rMap.zoomMinus(25);
-  // map.style.width = rMap.size + "%";
 }
 // Баг с омской обл
 // map
