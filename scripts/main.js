@@ -140,14 +140,6 @@ search.oninput = function() {
 }
 
 buttonAllResult.onclick = function() {
-  // if (this.classList.contains("active")) {
-  //   this.textContent = this.dataset.text;
-  //   clearResult();
-  // } else {
-  //   this.textContent = this.dataset.secondText;
-  //   setDefault();
-  // }
-  // this.classList.toggle("active");
   clearResult();
   setDefault();
 }
@@ -178,7 +170,8 @@ document.onmousemove = function(evt) {
 
 prepareArray(db);
 
-let btnPlus = document.getElementsByClassName("map__button-plus")[0],
+let mapBox = document.getElementsByClassName("map-wrapper")[0],
+    btnPlus = document.getElementsByClassName("map__button-plus")[0],
     btnMinus = document.getElementsByClassName("map__button-minus")[0];
 
 let b = map.getBBox();
@@ -250,10 +243,11 @@ map.onmousedown = function(evt) {
       x: evt.clientX,
       y: evt.clientY
     };
-    console.log(b.x);
-    rMap.x += shift.x;
-    rMap.y += shift.y;
-
+    // console.log("x: " + shift.x + "; y: " + shift.y);
+    rMap.x += shift.x / 3;
+    rMap.y += shift.y / 3;
+    // rMap.x += shift.x + 1;
+    // rMap.y += shift.y + 1;
     rMap.drow();
   }
 
@@ -270,11 +264,41 @@ map.onwheel = function(evt) {
   evt.preventDefault();
 
   if (evt.deltaY < 0) {
-    
     rMap.zoomPlus(10);
   }
   if (evt.deltaY > 0) {
     rMap.zoomMinus(10);
+  }
+}
+
+mapBox.onkeydown = function(evt) {
+  evt.preventDefault();
+  console.log(evt.keyCode);
+  if (evt.keyCode == "107") {
+    rMap.zoomPlus(25);
+  }
+  if (evt.keyCode == "109") {
+    rMap.zoomMinus(25);
+  }
+  // up
+  if (evt.keyCode == "38") {
+    rMap.y -= 5;
+    rMap.drow();
+  }
+  // down
+  if (evt.keyCode == "40") {
+    rMap.y += 5;
+    rMap.drow();
+  }
+  // left
+  if (evt.keyCode == "37") {
+    rMap.x -= 5;
+    rMap.drow();
+  }
+  // right
+  if (evt.keyCode == "39") {
+    rMap.x += 5;
+    rMap.drow();
   }
 }
 
@@ -285,6 +309,7 @@ btnPlus.onclick = function() {
 btnMinus.onclick = function() {
   rMap.zoomMinus(25);
 }
+
 // Баг с омской обл
 // map
 
